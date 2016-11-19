@@ -1,5 +1,13 @@
 "use strict";
 
+/*
+<div id="chatbox"></div>
+<input type="text" id="inputbox"></input>
+<input type="button" id="button" value="Chat!"></input>
+*/
+
+var chatbox, button, inputbox
+
 var score = 0
 {
 	let URL = location.href.replace(location.protocol, "ws:")
@@ -122,10 +130,37 @@ var score = 0
 		//let p2 = new Player(1, 60, 110, 4, curTime)
 		//visible.players.set(0, localplayer)
 
+		inputbox = document.createElement("input")
+		inputbox.setAttribute("type", "text")
+		document.body.appendChild(inputbox)
+		button = document.createElement("input")
+		button.setAttribute("type", "button")
+		button.setAttribute("value", "Chat!")
+		document.body.appendChild(button)
+		chatbox = document.createElement("hr")
+		document.body.appendChild(chatbox)
+		chatbox = document.createElement("div")
+		document.body.appendChild(chatbox)
+		
+
+// 		document.write(
+// 			`
+// <div id="chatbox"></div>
+// <input type="text" id="inputbox"></input>
+// <input type="button" id="button" value="Chat!"></input>
+// 			`)
+
 		var nameTable = []
 		let kek = function(e)
 		{
 			e = e.data
+
+			if (e.charAt(0) == "%")
+			{
+				// let chatbox = document.getElementById("chatbox")
+				chatbox.innerHTML = chatbox.innerHTML+"<br />"+e.substr(1)
+			}
+
 			let name = e.split(":")[3]
 			e = e.split(":").map(Number)
 			let hislocalid = e[4]
@@ -197,6 +232,15 @@ var score = 0
 			Player.prototype.localid = id
 			visible.players.set(id, localplayer)
 			ws.onmessage = kek
+			button.onclick = function()
+			{
+				let ipb = inputbox
+				// let ipb = document.getElementById("inputbox")
+				// let chatbox = document.getElementById("chatbox")
+				chatbox.innerHTML = chatbox.innerHTML+"<br />"+localplayer.name+": "+ipb.value
+				ws.send("%"+localplayer.name+": "+ipb.value)
+				ipb.value = ""
+			}
 			window.requestAnimationFrame(renderLoop)
 		}
 	}
