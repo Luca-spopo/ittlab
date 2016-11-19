@@ -31,6 +31,17 @@ function ws_disconnecthandler()
 function hackyMsgHandler(data)
 {
 	//data = data.split(":").map(Number)
+	if(typeof(data) == "string" && data.charAt(0)=="%")
+	{
+		console.log("chat: "+data.substr(1))
+	}
+	if(typeof(data) == "string" && data.charAt(0)=="&")
+	{
+		let arr = data.substr(1).split(":")
+		let pname = arr[1]
+		let score = arr[2]
+		console.log("Score of "+pname+" is "+score)
+	}
 	for (let i in plist)
 	{
 		let ws = plist[i]

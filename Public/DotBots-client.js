@@ -11,7 +11,17 @@ var chatbox, button, inputbox
 var score = 0
 {
 	let URL = location.href.replace(location.protocol, "ws:")
-	var ws;
+	var ws, localplayer;
+
+
+	let loseH = function()
+	{
+		score = 0
+		document.getElementById("score").innerHTML = score
+		Player.prototype.localid = localplayer.hislocalid = Math.floor(Math.random()*25600)
+		localplayer.x = Math.random()*300
+		localplayer.y = Math.random()*300
+	}
 
 	const PlayerFSM = function* ()
 	{
@@ -126,7 +136,7 @@ var score = 0
 		document.body.appendChild(canvas)
 		let theme = new Theme(canvas)
 		let visible = new Visible()
-		let localplayer //new Player(0, Math.random()*300, Math.random()*300, 3, curTime)
+		 //new Player(0, Math.random()*300, Math.random()*300, 3, curTime)
 		//let p2 = new Player(1, 60, 110, 4, curTime)
 		//visible.players.set(0, localplayer)
 
@@ -159,6 +169,14 @@ var score = 0
 			{
 				// let chatbox = document.getElementById("chatbox")
 				chatbox.innerHTML = chatbox.innerHTML+"<br />"+e.substr(1)
+				return
+			}
+			if (e.charAt(0) == "&")
+			{
+				// let chatbox = document.getElementById("chatbox")
+				if(e.substr(1).split(":")[0]==localplayer.id)
+					loseH();
+				return
 			}
 
 			let name = e.split(":")[3]
@@ -184,14 +202,7 @@ var score = 0
 						document.getElementById("score").innerHTML = score
 						p.x = -400
 						p.y = -400
-					}
-					else
-					{
-						score=0
-						document.getElementById("score").innerHTML = score
-						Player.prototype.localid = localplayer.hislocalid = Math.floor(Math.random()*25600)
-						localplayer.x = Math.random()*300
-						localplayer.y = Math.random()*300
+						ws.send("&"+p.id+":"+localplayer.name+":"+score)
 					}
 				}
 			}
