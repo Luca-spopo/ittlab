@@ -21,10 +21,10 @@ var Theme;
 		ctx.strokeStyle = "#FFFF00"
 		for (const keyval of visible.players) {
 			const player = keyval[1]
-			//console.log("My id is "+player.localid+" and "+player.name+"'s id is "+player.id)
-			if (player.id == player.localid)
+			//console.log("My id is "+player.localid+" and "+player.name+"'s id is "+player.hislocalid)
+			if (player.hislocalid == player.localid)
 				ctx.fillStyle = "#227722";
-			else if (player.getRelation(player.localid, player.id))
+			else if (player.getRelation(player.localid, player.hislocalid))
 				ctx.fillStyle = "#444477";
 			else
 				ctx.fillStyle = "#FF3333";

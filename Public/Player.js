@@ -8,8 +8,9 @@ var Player
 	let cos = Math.cos
 
 	//Player class
-	Player = function(id, x, y, dir, stamp, name)
+	Player = function(id, x, y, dir, stamp, name, hislocalid)
 	{
+		this.hislocalid = hislocalid || id
 		this.direction = dir;
 		this.id = id;
 		this.x = x

@@ -122,38 +122,51 @@ var score = 0
 		//let p2 = new Player(1, 60, 110, 4, curTime)
 		//visible.players.set(0, localplayer)
 
+		var nameTable = []
 		let kek = function(e)
 		{
 			e = e.data
 			let name = e.split(":")[3]
 			e = e.split(":").map(Number)
+			let hislocalid = e[4]
 			if (visible.players.get(e[0]))
 			{
 				let p = visible.players.get(e[0])
 				//console.log(p)
 				p.x = e[1]
 				p.y = e[2]
+				p.hislocalid = hislocalid
+				if ( hislocalid == Player.prototype.localid)
+					Player.prototype.localid = localplayer.hislocalid = Math.floor(Math.random()*25600)
+
 				let dist = (localplayer.x-p.x)*(localplayer.x-p.x) + (localplayer.y-p.y)*(localplayer.y-p.y)
-				console.log("Distance between me and " + p.name + " is " + dist + " and 4R^2 is " + 4*localplayer.radius*localplayer.radius)
+				//console.log("Distance between me and " + p.name + " is " + dist + " and 4R^2 is " + 4*localplayer.radius*localplayer.radius)
 				if (dist < 4*localplayer.radius*localplayer.radius)
 				{
-					if(localplayer.getRelation(localplayer.id, e[0]))
+					if(localplayer.getRelation(localplayer.localid, hislocalid))
 					{
 						score++
 						document.getElementById("score").innerHTML = score
+						p.x = -400
+						p.y = -400
 					}
 					else
 					{
 						score=0
 						document.getElementById("score").innerHTML = score
-						Player.prototype.localid = localplayer.id = Math.floor(Math.random()*256)
+						Player.prototype.localid = localplayer.hislocalid = Math.floor(Math.random()*25600)
 						localplayer.x = Math.random()*300
 						localplayer.y = Math.random()*300
 					}
 				}
 			}
 			else
-				visible.players.set(e[0], new Player(e[0], e[1], e[2], 0, curTime, name))
+			{
+				if (nameTable[name])
+					visible.players.set(nameTable[name], null)
+				visible.players.set(e[0], new Player(e[0], e[1], e[2], 0, curTime, name, hislocalid))
+				nameTable[name] = e[0]
+			}
 		}
 
 		//visible.players.set(1, p2)
@@ -171,7 +184,7 @@ var score = 0
 			if (curTime - lastTime > 40)
 			{
 				lastTime = curTime
-				ws.send(localplayer.id.toString()+":"+localplayer.x.toString()+":"+localplayer.y.toString()+":"+localplayer.name.toString())
+				ws.send(localplayer.id.toString()+":"+localplayer.x.toString()+":"+localplayer.y.toString()+":"+localplayer.name.toString()+":"+Player.prototype.localid)
 			}
 			window.requestAnimationFrame(renderLoop)
 		}
