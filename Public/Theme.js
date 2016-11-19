@@ -30,10 +30,14 @@ var Theme;
 				ctx.fillStyle = "#FF3333";
 			ctx.beginPath()
 			// console.log(player.id == player.myId, player.hunted)
-			ctx.arc(player.x, player.y, player.radius, 0, 100)
+			var arr = player.getXY(Date.now()-30)
+			var px = arr[0]
+			var py = arr[1]
+			//console.log(px, py)
+			ctx.arc(px, py, player.radius, 0, 100)
 			ctx.closePath()
 			ctx.fill()
-			ctx.fillText(player.name, player.x-player.radius, player.y-5-player.radius);
+			ctx.fillText(player.name, px-player.radius, py-5-player.radius);
 		}
 	}
 	//The renderer to use:

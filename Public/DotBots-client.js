@@ -234,6 +234,13 @@ var score = 0
 			}
 			window.requestAnimationFrame(renderLoop)
 		}
+		window.setInterval(function()
+		{
+			for (const keyval of visible.players) {
+				const player = keyval[1]
+				player.update(player.x, player.y, Date.now())
+			}
+		}, 5)
 		ws.onmessage = function(e)
 		{
 			let localname = window.prompt("Please enter your name: ")
