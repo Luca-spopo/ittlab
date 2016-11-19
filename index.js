@@ -19,10 +19,12 @@ let wss = new WebSocketServer({ server: http });
 
 let players = 0;
 let plist = []
+let wslookup = []
 
 function ws_disconnecthandler()
 {
 	players--;
+	plist[wslookup[this]] = null
 	console.log("WS ", this.upgradeReq.connection.remoteAddress," disconnected, ", players, " clients connected")
 }
 
@@ -33,7 +35,9 @@ function hackyMsgHandler(data)
 	{
 		let ws = plist[i]
 		if (ws && ws != this)
-			ws.send(i+":"+data)
+		{
+			ws.send(data)
+		}
 	}
 }
 
@@ -44,6 +48,7 @@ function ws_connecthandler(ws)
 	//game.connectPlayer(ws)
 	ws.send(players.toString())
 	plist[players] = ws
+	wslookup[ws] = players
 	ws.on('close', ws_disconnecthandler);
 	ws.on("message", hackyMsgHandler)
 	players++;

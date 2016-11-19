@@ -11,14 +11,20 @@ var Theme;
 	let Pi2 = Math.PI * 2
 	proto.simplerender = function(visible) {
 		let ctx = this.ctx2D
-		ctx.clearRect(0, 0, this.canvas.height, this.canvas.width)
+		ctx.save();
+		// Use the identity matrix while clearing the canvas
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		// Restore the transform
+		ctx.restore();
+
 		ctx.strokeStyle = "#FFFF00"
 		for (const keyval of visible.players) {
 			const player = keyval[1]
-			console.log(keyval)
-			if (player.id == player.myId)
+			//console.log("My id is "+player.localid+" and "+player.name+"'s id is "+player.id)
+			if (player.id == player.localid)
 				ctx.fillStyle = "#227722";
-			else if (player.hunted)
+			else if (player.getRelation(player.localid, player.id))
 				ctx.fillStyle = "#444477";
 			else
 				ctx.fillStyle = "#FF3333";

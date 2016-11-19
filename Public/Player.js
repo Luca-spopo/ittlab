@@ -22,7 +22,7 @@ var Player
 			this.hunted = Player.prototype.getRelation(Player.prototype.myId, id)
 	}
 	let proto = Player.prototype
-	proto.myId = 0
+	proto.localid = Math.floor(Math.random()*256)
 	proto.radius = 20
 	proto.speed = 0.2
 	proto.getRelation = function(id1, id2) //True <=> id1 hunts id2
@@ -31,6 +31,8 @@ var Player
 		let con2 = (id1 + id2)%2 == 1
 		return con1 ? con2 : !con2
 	}
+	console.log(proto.getRelation(3, 4))
+	console.log(proto.getRelation(4, 3))
 	proto.update = function(x, y, dir, stamp)
 	{
 		let xs = this.xs

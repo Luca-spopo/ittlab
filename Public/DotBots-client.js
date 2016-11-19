@@ -1,8 +1,8 @@
 "use strict";
 
-
+var score = 0
 {
-	let URL = "ws://localhost:3000/DotBots"
+	let URL = location.href.replace(location.protocol, "ws:")
 	var ws;
 
 	const PlayerFSM = function* ()
@@ -125,17 +125,35 @@
 		let kek = function(e)
 		{
 			e = e.data
-			let name = e.split(":")[4]
+			let name = e.split(":")[3]
 			e = e.split(":").map(Number)
-			if (visible.players.get(e[1]))
+			if (visible.players.get(e[0]))
 			{
-				let p = visible.players.get(e[1])
+				let p = visible.players.get(e[0])
 				//console.log(p)
-				p.x = e[2]
-				p.y = e[3]
+				p.x = e[1]
+				p.y = e[2]
+				let dist = (localplayer.x-p.x)*(localplayer.x-p.x) + (localplayer.y-p.y)*(localplayer.y-p.y)
+				console.log("Distance between me and " + p.name + " is " + dist + " and 4R^2 is " + 4*localplayer.radius*localplayer.radius)
+				if (dist < 4*localplayer.radius*localplayer.radius)
+				{
+					if(localplayer.getRelation(localplayer.id, e[0]))
+					{
+						score++
+						document.getElementById("score").innerHTML = score
+					}
+					else
+					{
+						score=0
+						document.getElementById("score").innerHTML = score
+						Player.prototype.localid = localplayer.id = Math.floor(Math.random()*256)
+						localplayer.x = Math.random()*300
+						localplayer.y = Math.random()*300
+					}
+				}
 			}
 			else
-				visible.players.set(e[1], new Player(e[1], e[2], e[3], 0, curTime, name))
+				visible.players.set(e[0], new Player(e[0], e[1], e[2], 0, curTime, name))
 		}
 
 		//visible.players.set(1, p2)
@@ -162,6 +180,8 @@
 			let localname = window.prompt("Please enter your name: ")
 			let id = Number(e.data)
 			localplayer = new Player(id, Math.random()*300, Math.random()*300, 3, curTime, localname)
+			console.log("Setting localid to "+id)
+			Player.prototype.localid = id
 			visible.players.set(id, localplayer)
 			ws.onmessage = kek
 			window.requestAnimationFrame(renderLoop)
