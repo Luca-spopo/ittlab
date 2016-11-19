@@ -1,6 +1,9 @@
 "use strict";
 var Theme;
 {
+
+	var sin = Math.sin
+	var cos = Math.cos
 	//Theme class
 	Theme = function(canvas)
 	{
@@ -31,10 +34,12 @@ var Theme;
 
 		//////////////
 
+		var now = Date.now()
+
 		ctx.strokeStyle = "#FFFF00"
 		for (const keyval of visible.players) {
 			const player = keyval[1]
-			var arr = player.getXY(Date.now()-30)
+			var arr = player.getXY(now-30)
 			var px = arr[0]
 			var py = arr[1]
 			
@@ -64,9 +69,30 @@ var Theme;
 			ctx.closePath()
 			ctx.fill()
 			ctx.fillStyle = color;
-		
+			
 			ctx.fillText(player.name, px-player.radius, py-5-player.radius);
 		}
+			
+
+			var xa = [5*cos(now/100+1), -10*sin(now/200), -7*sin(now/150+1000), 6*cos(now/300+12), -10*sin(now/230)]
+			var ya = [-10*sin(now/200), -7*sin(now/150+1000), 5*cos(now/100), 6*cos(now/300+80), -6*sin(14+now/230)]
+			var ra = [4, 3, 4, 2, 3]
+		
+						ctx.fillStyle = "#227722";
+
+
+			for(let kek=0; kek<5; kek++)
+			{
+				ctx.beginPath()
+				ctx.arc(window.mousex + xa[kek], window.mousey + ya[kek], ra[kek], 0, 100)
+				ctx.closePath()
+				ctx.fill()
+			}
+			// ctx.beginPath()
+			// ctx.arc(circle2x, circle2y, 3, 0, 100)
+			// ctx.closePath()
+			// ctx.fill()
+
 	}
 	//The renderer to use:
 	proto.render = proto.simplerender
